@@ -94,7 +94,7 @@ const EDUCATION = {
   awards: [
     "Edwin A. Stevens Award",
     "Presidential Award",
-    "Dean’s List",
+    "Dean&#39;s List",
   ],
   coursework: [
     "Software Development",
@@ -277,7 +277,7 @@ function Hero() {
             Building scalable systems & useful software engineered products.
           </h1>
           <p className="max-w-2xl text-white/70">
-            Hey, I'm Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
+            Hey, I&#39;m Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
@@ -425,8 +425,8 @@ function Contact() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="rounded-2xl border border-white/10 p-6">
-        <h3 className="text-lg font-semibold">Let’s connect</h3>
-        <p className="mt-2 text-sm text-white/75">Whether you’re hiring for SWE internships or want to chat about full‑stack, systems, or ML, I’d love to talk.</p>
+        <h3 className="text-lg font-semibold">Let&#39;s connect</h3>
+        <p className="mt-2 text-sm text-white/75">Whether you&#39;re hiring for SWE internships or want to chat about full‑stack, systems, or ML, I&#39;d love to talk.</p>
         <div className="mt-4 flex flex-wrap gap-3">
           <a href={LINKS.email} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5"><Mail className="h-4 w-4" /> Email</a>
           <a href={LINKS.linkedin} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5"><Linkedin className="h-4 w-4" /> LinkedIn</a>
@@ -496,7 +496,7 @@ export default function Portfolio() {
           </div>
         </Section>
 
-        <Section id="experience" title="Experience" subtitle="What I’ve shipped" icon={Briefcase}>
+        <Section id="experience" title="Experience" subtitle="What I&#39;ve shipped" icon={Briefcase}>
           <div className="grid gap-6 md:grid-cols-2">
             {EXPERIENCES.map((e) => (
               <ExperienceCard key={e.company + e.date} exp={e} />
