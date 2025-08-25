@@ -1,7 +1,6 @@
 "use client";
-/* eslint-disable react/no-unescaped-entities */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   Github,
@@ -21,38 +20,69 @@ import {
 } from "lucide-react";
 
 // =============================================
-// AYUSH MISRA — SINGLE-FILE REACT PORTFOLIO (FIXED)
-// - Fixes unterminated JSX (<p> tag) that caused SyntaxError.
-// - Restores complete Skills, Education, Contact sections.
-// - Removes Resume button per user request.
-// - Smooth-scrolling nav to avoid any browser/CSP blocking warnings.
-// - Adds lightweight runtime "tests" via console.assert for section anchors.
+// AYUSH MISRA — SINGLE-FILE REACT PORTFOLIO (TS FIXES)
+// - Removed unused ESLint disable comment to silence warning.
+// - Added TypeScript props for all components (no implicit any).
+// - Kept dark UI + your content unchanged.
 // =============================================
 
+// ---------- TYPES ----------
+type WithChildren = { children?: ReactNode };
+
+type IconType = React.ComponentType<{
+  className?: string;
+}>;
+
+type SectionProps = WithChildren & {
+  id: string;
+  title: string;
+  subtitle?: string;
+  icon?: IconType;
+};
+
+type Experience = {
+  company: string;
+  title: string;
+  date: string;
+  location: string;
+  tags?: string[];
+  bullets: string[];
+};
+
+type Project = {
+  name: string;
+  blurb: string;
+  tags: string[];
+  links?: { demo?: string; repo?: string };
+};
+
+type NavItem = { id: string; label: string };
+
+// ---------- CONSTANTS ----------
 const LINKS = {
   email: "mailto:amisra2@stevens.edu",
   github: "https://github.com/ayushmisra05",
   linkedin: "http://linkedin.com/in/ayush-misra-a0259b283",
 };
 
-const TAG = ({ children }) => (
+const TAG: React.FC<WithChildren> = ({ children }) => (
   <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium tracking-wide backdrop-blur border-white/15 bg-white/5 text-white/80">
     {children}
   </span>
 );
 
-const Section = ({ id, title, subtitle, icon: Icon, children }) => (
+const Section: React.FC<SectionProps> = ({ id, title, subtitle, icon: Icon, children }) => (
   <section id={id} className="scroll-mt-24 py-16 sm:py-24">
     <div className="mx-auto max-w-6xl px-4">
       <div className="mb-10 flex items-center gap-3">
         {Icon ? (
-          <div className="rounded-2xl bg-white/5 p-2.5 border border-white/10"><Icon className="h-5 w-5" /></div>
+          <div className="rounded-2xl bg-white/5 p-2.5 border border-white/10">
+            <Icon className="h-5 w-5" />
+          </div>
         ) : null}
         <div>
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{title}</h2>
-          {subtitle ? (
-            <p className="text-sm text-white/60 mt-1">{subtitle}</p>
-          ) : null}
+          {subtitle ? <p className="text-sm text-white/60 mt-1">{subtitle}</p> : null}
         </div>
       </div>
       {children}
@@ -60,19 +90,19 @@ const Section = ({ id, title, subtitle, icon: Icon, children }) => (
   </section>
 );
 
-const Badge = ({ children }) => (
+const Badge: React.FC<WithChildren> = ({ children }) => (
   <span className="rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2.5 py-1 text-xs">
     {children}
   </span>
 );
 
-const Separator = () => (
+const Separator: React.FC = () => (
   <div className="mx-auto max-w-6xl px-4">
     <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
   </div>
 );
 
-const useCopy = (text) => {
+const useCopy = (text: string) => {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -92,12 +122,8 @@ const EDUCATION = {
   degree: "B.S. in Computer Science",
   location: "Hoboken, NJ",
   grad: "Expected May 2027",
-  gpa: "GPA: 3.92/4",
-  awards: [
-    "Edwin A. Stevens Award",
-    "Presidential Award",
-    "Dean&apos;s List",
-  ],
+  gpa: "GPA: 3.92/4.0",
+  awards: ["Edwin A. Stevens Award", "Presidential Award", "Dean’s List"],
   coursework: [
     "Software Development",
     "Data Structures",
@@ -139,17 +165,10 @@ const SKILLS = {
     "IBM MQ",
     "Jira",
   ],
-  Cloud_Databases: [
-    "AWS",
-    "Azure",
-    "IBM Db2",
-    "PostgreSQL",
-    "MongoDB",
-    "DynamoDB",
-  ],
+  Cloud_Databases: ["AWS", "Azure", "IBM Db2", "PostgreSQL", "MongoDB", "DynamoDB"],
 };
 
-const EXPERIENCES = [
+const EXPERIENCES: Experience[] = [
   {
     company: "Principal Financial Group",
     title: "Software Engineer Intern",
@@ -176,12 +195,22 @@ const EXPERIENCES = [
   },
 ];
 
-const PROJECTS = [
+const PROJECTS: Project[] = [
   {
     name: "BRIEF — Automated OOO Catch-Up",
     blurb:
       "AI-powered assistant that centralizes Outlook, Teams, and JIRA updates for returning employees. Generates priority-ranked summaries, proposes meetings from Microsoft Graph availability, and surfaces must-read threads. Top-5 Finalist among 30 teams with plans for enterprise deployment.",
-    tags: ["Python", "React", "TypeScript", "Next.js", "AWS Lambda", "DynamoDB", "Microsoft Graph", "JIRA", "LLMOps"],
+    tags: [
+      "Python",
+      "React",
+      "TypeScript",
+      "Next.js",
+      "AWS Lambda",
+      "DynamoDB",
+      "Microsoft Graph",
+      "JIRA",
+      "LLMOps",
+    ],
     links: {},
   },
   {
@@ -200,7 +229,7 @@ const PROJECTS = [
   },
 ];
 
-const NAV = [
+const NAV: NavItem[] = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
@@ -214,12 +243,12 @@ function Nav() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const goTo = (e, id) => {
+  const goTo = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -230,18 +259,32 @@ function Nav() {
     <div className="sticky top-0 z-40 border-b border-white/10 bg-zinc-950/70 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/50">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-14 items-center justify-between">
-          <a href="#about" onClick={(e)=>goTo(e,"about")} className="flex items-center gap-2 font-semibold tracking-tight">
+          <a
+            href="#about"
+            onClick={(e) => goTo(e, "about")}
+            className="flex items-center gap-2 font-semibold tracking-tight"
+          >
             <Code2 className="h-5 w-5" />
             <span>Ayush Misra</span>
           </a>
           <div className="hidden md:flex items-center gap-6 text-sm">
             {NAV.map((n) => (
-              <a key={n.id} href={`#${n.id}`} onClick={(e)=>goTo(e,n.id)} className="text-white/80 hover:text-white transition-colors">
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                onClick={(e) => goTo(e, n.id)}
+                className="text-white/80 hover:text-white transition-colors"
+              >
                 {n.label}
               </a>
             ))}
           </div>
-          <button onClick={() => setOpen((s) => !s)} className="md:hidden rounded-lg border border-white/10 p-2" aria-expanded={open} aria-controls="mobile-nav">
+          <button
+            onClick={() => setOpen((s) => !s)}
+            className="md:hidden rounded-lg border border-white/10 p-2"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+          >
             <span className="sr-only">Toggle Menu</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -252,7 +295,12 @@ function Nav() {
           <div id="mobile-nav" className="md:hidden border-t border-white/10 py-3">
             <div className="flex flex-col gap-3">
               {NAV.map((n) => (
-                <a key={n.id} href={`#${n.id}`} onClick={(e)=>goTo(e,n.id)} className="text-white/80 hover:text-white transition-colors">
+                <a
+                  key={n.id}
+                  href={`#${n.id}`}
+                  onClick={(e) => goTo(e, n.id)}
+                  className="text-white/80 hover:text-white transition-colors"
+                >
                   {n.label}
                 </a>
               ))}
@@ -273,13 +321,18 @@ function Hero() {
         <div className="absolute left-1/2 top-10 h-72 w-[65rem] -translate-x-1/2 rounded-full bg-gradient-to-tr from-emerald-500/20 via-sky-500/10 to-indigo-500/20 blur-3xl" />
       </div>
       <div className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex flex-col items-start gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-start gap-6"
+        >
           <Badge>Open to 2026 SWE Internships</Badge>
           <h1 className="text-4xl sm:text-5xl font-semibold leading-tight tracking-tight">
             Building scalable systems & useful software engineered products.
           </h1>
           <p className="max-w-2xl text-white/70">
-            Hey, I&apos;m Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
+            Hey, I'm Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
@@ -300,15 +353,26 @@ function Hero() {
 }
 
 // ---------- EXPERIENCE CARD ----------
-function ExperienceCard({ exp }) {
+const ExperienceCard: React.FC<{ exp: Experience }> = ({ exp }) => {
   return (
-    <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}
-      className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-white/20">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+      className="group rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-white/20"
+    >
       <div className="flex flex-wrap items-center gap-3">
-        <div className="rounded-xl bg-white/5 p-2.5 border border-white/10"><Briefcase className="h-4 w-4" /></div>
+        <div className="rounded-xl bg-white/5 p-2.5 border border-white/10">
+          <Briefcase className="h-4 w-4" />
+        </div>
         <div className="min-w-0">
-          <h3 className="text-lg font-semibold leading-tight">{exp.title} · <span className="text-white/80">{exp.company}</span></h3>
-          <p className="text-xs text-white/60">{exp.date} · {exp.location}</p>
+          <h3 className="text-lg font-semibold leading-tight">
+            {exp.title} · <span className="text-white/80">{exp.company}</span>
+          </h3>
+          <p className="text-xs text-white/60">
+            {exp.date} · {exp.location}
+          </p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
@@ -323,13 +387,18 @@ function ExperienceCard({ exp }) {
       </ul>
     </motion.div>
   );
-}
+};
 
 // ---------- PROJECT CARD ----------
-function ProjectCard({ p }) {
+const ProjectCard: React.FC<{ p: Project }> = ({ p }) => {
   return (
-    <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-white/20">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-white/20"
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold leading-tight">{p.name}</h3>
@@ -357,13 +426,19 @@ function ProjectCard({ p }) {
       ) : null}
     </motion.div>
   );
-}
+};
 
 // ---------- SKILLS ----------
 function Skills() {
   return (
     <div className="grid gap-6 md:grid-cols-3">
-      <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.3 }} className="rounded-2xl border border-white/10 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3 }}
+        className="rounded-2xl border border-white/10 p-6"
+      >
         <h3 className="text-base font-semibold">Languages</h3>
         <div className="mt-3 flex flex-wrap gap-2">
           {SKILLS.Languages.map((s) => (
@@ -371,7 +446,13 @@ function Skills() {
           ))}
         </div>
       </motion.div>
-      <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.35 }} className="rounded-2xl border border-white/10 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.35 }}
+        className="rounded-2xl border border-white/10 p-6"
+      >
         <h3 className="text-base font-semibold">Frameworks & Tools</h3>
         <div className="mt-3 flex flex-wrap gap-2">
           {SKILLS.Frameworks.map((s) => (
@@ -379,7 +460,13 @@ function Skills() {
           ))}
         </div>
       </motion.div>
-      <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className="rounded-2xl border border-white/10 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className="rounded-2xl border border-white/10 p-6"
+      >
         <h3 className="text-base font-semibold">Cloud & Databases</h3>
         <div className="mt-3 flex flex-wrap gap-2">
           {SKILLS.Cloud_Databases.map((s) => (
@@ -397,16 +484,28 @@ function Education() {
     <div className="rounded-2xl border border-white/10 p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-white/5 p-2.5 border border-white/10"><School className="h-5 w-5" /></div>
+          <div className="rounded-xl bg-white/5 p-2.5 border border-white/10">
+            <School className="h-5 w-5" />
+          </div>
           <div>
             <h3 className="text-lg font-semibold leading-tight">{EDUCATION.school}</h3>
-            <p className="text-sm text-white/70">{EDUCATION.degree} · {EDUCATION.gpa}</p>
-            <p className="text-xs text-white/60">{EDUCATION.location} · {EDUCATION.grad}</p>
+            <p className="text-sm text-white/70">
+              {EDUCATION.degree} · {EDUCATION.gpa}
+            </p>
+            <p className="text-xs text-white/60">
+              {EDUCATION.location} · {EDUCATION.grad}
+            </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {EDUCATION.awards.map((a) => (
-            <span key={a} className="inline-flex items-center gap-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2.5 py-1 text-xs"><Award className="h-3.5 w-3.5" />{a}</span>
+            <span
+              key={a}
+              className="inline-flex items-center gap-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2.5 py-1 text-xs"
+            >
+              <Award className="h-3.5 w-3.5" />
+              {a}
+            </span>
           ))}
         </div>
       </div>
@@ -427,20 +526,42 @@ function Contact() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="rounded-2xl border border-white/10 p-6">
-        <h3 className="text-lg font-semibold">Let&apos;s connect</h3>
-        <p className="mt-2 text-sm text-white/75">Whether you&apos;re hiring for SWE internships or want to chat about full‑stack, systems, or ML, I&apos;d love to talk.</p>
+        <h3 className="text-lg font-semibold">Let’s connect</h3>
+        <p className="mt-2 text-sm text-white/75">
+          Whether you’re hiring for SWE internships or want to chat about full‑stack, systems, or ML, I’d love to talk.
+        </p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <a href={LINKS.email} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5"><Mail className="h-4 w-4" /> Email</a>
-          <a href={LINKS.linkedin} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5"><Linkedin className="h-4 w-4" /> LinkedIn</a>
-          <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5"><Github className="h-4 w-4" /> GitHub</a>
+          <a href={LINKS.email} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
+            <Mail className="h-4 w-4" /> Email
+          </a>
+          <a href={LINKS.linkedin} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
+            <Linkedin className="h-4 w-4" /> LinkedIn
+          </a>
+          <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
+            <Github className="h-4 w-4" /> GitHub
+          </a>
         </div>
       </div>
       <div className="rounded-2xl border border-white/10 p-6">
         <h3 className="text-lg font-semibold">Quick note</h3>
         <form action={LINKS.email} method="GET" className="mt-3 space-y-3">
-          <input name="subject" placeholder="Subject" className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30" />
-          <textarea name="body" placeholder="Your message" rows={5} className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30" />
-          <button type="submit" className="inline-flex items-center gap-2 rounded-xl bg-white text-zinc-900 px-3 py-2 text-sm font-medium hover:bg-white/90"><Mail className="h-4 w-4" /> Send</button>
+          <input
+            name="subject"
+            placeholder="Subject"
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30"
+          />
+          <textarea
+            name="body"
+            placeholder="Your message"
+            rows={5}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30"
+          />
+          <button
+            type="submit"
+            className="inline-flex items-center gap-2 rounded-xl bg-white text-zinc-900 px-3 py-2 text-sm font-medium hover:bg-white/90"
+          >
+            <Mail className="h-4 w-4" /> Send
+          </button>
         </form>
       </div>
     </div>
@@ -470,13 +591,23 @@ export default function Portfolio() {
 
         <Section id="about" title="About" subtitle="Who I am & what I do" icon={Brain}>
           <div className="grid gap-6 md:grid-cols-5">
-            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className="md:col-span-3 rounded-2xl border border-white/10 p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="md:col-span-3 rounded-2xl border border-white/10 p-6"
+            >
               <p className="text-white/80">
                 I enjoy scaling systems and products and automating tasks through machine learning that solve real world problems, Recently I...
               </p>
               <ul className="mt-3 list-disc space-y-2 pl-5 text-white/80 text-sm">
-                <li>Shipped event-driven microservices at <strong>Principal Financial</strong> using Java, Spring Boot, AWS, and IBM MQ.</li>
-                <li>Built an AI compliance platform with FastAPI, MongoDB, Qdrant, and SBERT semantic retrieval.</li>
+                <li>
+                  Shipped event-driven microservices at <strong>Principal Financial</strong> using Java, Spring Boot, AWS, and IBM MQ.
+                </li>
+                <li>
+                  Built an AI compliance platform with FastAPI, MongoDB, Qdrant, and SBERT semantic retrieval.
+                </li>
                 <li>Designed full-stack apps with React/Next.js and serverless (AWS Lambda + DynamoDB).</li>
               </ul>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -486,19 +617,33 @@ export default function Portfolio() {
                 <TAG>AWS Cloud</TAG>
               </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }} className="md:col-span-2 rounded-2xl border border-white/10 p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45 }}
+              className="md:col-span-2 rounded-2xl border border-white/10 p-6"
+            >
               <h4 className="text-sm font-semibold tracking-wide text-white/80">Fast facts</h4>
               <div className="mt-3 space-y-2 text-sm text-white/75">
-                <div className="flex items-center gap-2"><School className="h-4 w-4" /> Stevens Institute of Technology</div>
-                <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Hoboken, NJ</div>
-                <div className="flex items-center gap-2"><Award className="h-4 w-4" /> Edwin A. Stevens & Presidential Awards</div>
-                <div className="flex items-center gap-2"><Gauge className="h-4 w-4" /> GPA 3.92/4</div>
+                <div className="flex items-center gap-2">
+                  <School className="h-4 w-4" /> Stevens Institute of Technology
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" /> Hoboken, NJ
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4" /> Edwin A. Stevens & Presidential Awards
+                </div>
+                <div className="flex items-center gap-2">
+                  <Gauge className="h-4 w-4" /> GPA 3.92/4
+                </div>
               </div>
             </motion.div>
           </div>
         </Section>
 
-        <Section id="experience" title="Experience" subtitle="What I&apos;ve shipped" icon={Briefcase}>
+        <Section id="experience" title="Experience" subtitle="What I’ve shipped" icon={Briefcase}>
           <div className="grid gap-6 md:grid-cols-2">
             {EXPERIENCES.map((e) => (
               <ExperienceCard key={e.company + e.date} exp={e} />
@@ -530,9 +675,15 @@ export default function Portfolio() {
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/60">
           <div>© {year} Ayush Misra. Built with React & Tailwind.</div>
           <div className="flex items-center gap-3">
-            <a href={LINKS.github} className="hover:text-white"><Github className="h-4 w-4" /></a>
-            <a href={LINKS.linkedin} className="hover:text-white"><Linkedin className="h-4 w-4" /></a>
-            <a href={LINKS.email} className="hover:text-white"><Mail className="h-4 w-4" /></a>
+            <a href={LINKS.github} className="hover:text-white">
+              <Github className="h-4 w-4" />
+            </a>
+            <a href={LINKS.linkedin} className="hover:text-white">
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a href={LINKS.email} className="hover:text-white">
+              <Mail className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </footer>
