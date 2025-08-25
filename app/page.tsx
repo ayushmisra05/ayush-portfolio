@@ -332,7 +332,7 @@ function Hero() {
             Building scalable systems & useful software engineered products.
           </h1>
           <p className="max-w-2xl text-white/70">
-            Hey, I'm Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
+            Hey, I&apos;m Ayush a Computer Science student at Stevens. I have a large passion for Software Engineering and AI Automation.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <a href={LINKS.github} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-3 py-2 hover:bg-white/5">
